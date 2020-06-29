@@ -11,6 +11,10 @@ const db = pgp(CONNECTION_STRING);
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//bcrypt
+const bcrypt = require("bcrypt");
+SALT_ROUNDS = 10;
+
 //mustache
 const mustacheExpress = require("mustache-express");
 app.engine("mustache", mustacheExpress());
@@ -30,12 +34,17 @@ app.post("/register", (req, res) => {
       if (user) {
         res.render("register", { message: "Username already exists" });
       } else {
-        //insert user into users table
-        db.none("INSERT INTO users(username, password) VALUES($1, $2)", [
-          username,
-          password,
-        ]).then(() => {
-          res.send("success");
+        //insert user into users table with hashed password
+
+        bcrypt.hash(password, SALT_ROUNDS, (error, hash) => {
+          if (error == null) {
+            db.none("INSERT INTO users(username, password) VALUES($1, $2)", [
+              username,
+              hash,
+            ]).then(() => {
+              res.send("success");
+            });
+          }
         });
       }
     }
