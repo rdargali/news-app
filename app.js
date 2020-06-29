@@ -17,7 +17,13 @@ SALT_ROUNDS = 10;
 
 //mustache
 const mustacheExpress = require("mustache-express");
-app.engine("mustache", mustacheExpress());
+app.engine(
+  "mustache",
+  mustacheExpress(
+    "/Users/rawanddargali/Desktop/Repos/news-app/views/partials",
+    ".mustache"
+  )
+);
 app.set("views", "./views");
 app.set("view engine", "mustache");
 
