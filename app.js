@@ -21,6 +21,36 @@ app.engine("mustache", mustacheExpress());
 app.set("views", "./views");
 app.set("view engine", "mustache");
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post("/login", (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+
+  db.oneOrNone(
+    "SELECT userid, username, password FROM users WHERE username = $1",
+    [username]
+  ).then((user) => {
+    if (user) {
+      //check for password
+      bcrypt.compare(password, user.password, (error, result) => {
+        if (result) {
+          //password matches hashed pw in db
+          res.send("success");
+        } else {
+          //pw doesn't match
+          res.render("login", { message: "Invalid username or password!" });
+        }
+      });
+    } else {
+      //if user doesn't exist
+      res.render("login", { message: "Invalid username or password!" });
+    }
+  });
+});
+
 app.get("/register", (req, res) => {
   res.render("register");
 });
