@@ -21,6 +21,16 @@ app.engine("mustache", mustacheExpress());
 app.set("views", "./views");
 app.set("view engine", "mustache");
 
+//session
+const session = require("express-session");
+app.use(
+  session({
+    secret: "totally secret secrey key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 app.get("/login", (req, res) => {
   res.render("login");
 });
@@ -37,8 +47,15 @@ app.post("/login", (req, res) => {
       //check for password
       bcrypt.compare(password, user.password, (error, result) => {
         if (result) {
-          //password matches hashed pw in db
-          res.send("success");
+          //password (and username) matches hashed pw in db
+          //put username and password in session
+          if (session) {
+            req.session.user = {
+              userId: user.userid,
+              username: user.username,
+            };
+          }
+          res.redirect("/users/articles");
         } else {
           //pw doesn't match
           res.render("login", { message: "Invalid username or password!" });
@@ -49,6 +66,10 @@ app.post("/login", (req, res) => {
       res.render("login", { message: "Invalid username or password!" });
     }
   });
+});
+
+app.get("/users/articles", (req, res) => {
+  res.render("articles", { username: req.session.user.username });
 });
 
 app.get("/register", (req, res) => {
