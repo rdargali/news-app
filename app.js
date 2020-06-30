@@ -37,6 +37,24 @@ app.use(
   })
 );
 
+app.get("/users/add-article", (req, res) => {
+  res.render("add-article");
+});
+
+app.post("/users/add-article", (req, res) => {
+  let title = req.body.title;
+  let body = req.body.body;
+  let userId = req.session.user.userId;
+
+  db.none("INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)", [
+    title,
+    body,
+    userId,
+  ]).then(() => {
+    res.send("success!");
+  });
+});
+
 app.get("/login", (req, res) => {
   res.render("login");
 });
@@ -61,6 +79,7 @@ app.post("/login", (req, res) => {
               username: user.username,
             };
           }
+          console.log(req.session);
           res.redirect("/users/articles");
         } else {
           //pw doesn't match
