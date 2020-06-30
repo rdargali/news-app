@@ -51,7 +51,7 @@ app.post("/users/add-article", (req, res) => {
     body,
     userId,
   ]).then(() => {
-    res.send("success!");
+    res.redirect("/users/articles");
   });
 });
 
@@ -94,7 +94,13 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/users/articles", (req, res) => {
-  res.render("articles", { username: req.session.user.username });
+  userId = req.session.user.userId;
+
+  db.any("SELECT articleid,title,body FROM articles WHERE userid = $1", [
+    userId,
+  ]).then((articles) => {
+    res.render("articles", { articles: articles });
+  });
 });
 
 app.get("/register", (req, res) => {
