@@ -17,18 +17,18 @@
 <form method="POST" action="/users/update-article">
     <div class="form-group">
         <label for="exampleInputEmail1">Title</label>
-        <input name="title" value={{title}} type="text" class="form-control"  placeholder="Article Title">
+        <input name="title" value="{{title}}" type="text" class="form-control"  placeholder="Article Title" />
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Body</label>
-      <textarea name="body" class="form-control" placeholder="Article Body"></textarea>
+      <textarea name="body"  class="form-control" placeholder="Article Body">{{body}}</textarea>
     </div>
 
-    <div class="form-group">
+
+    <input type="hidden" name="articleId" value="{{articleid}}" />    
+    <button type="submit" class="btn btn-primary">Submit Edit</button>
         
-        <button type="submit" class="btn btn-primary">Submit Article</button>
-        
-    </div>
+  
 
    
 </form>

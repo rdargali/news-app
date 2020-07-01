@@ -37,6 +37,20 @@ app.use(
   })
 );
 
+app.post("/users/update-article", (req, res) => {
+  let title = req.body.title;
+  let body = req.body.body;
+  let articleId = req.body.articleId;
+
+  db.none("UPDATE articles SET title = $1, body = $2 WHERE articleid = $3", [
+    title,
+    body,
+    articleId,
+  ]).then(() => {
+    res.redirect("/users/articles");
+  });
+});
+
 app.get("/users/articles/edit/:articleId", (req, res) => {
   let articleId = req.params.articleId;
   db.one("SELECT articleid,title,body FROM articles WHERE articleid =$1", [
@@ -90,7 +104,7 @@ app.post("/login", (req, res) => {
               username: user.username,
             };
           }
-          console.log(req.session);
+
           res.redirect("/users/articles");
         } else {
           //pw doesn't match
