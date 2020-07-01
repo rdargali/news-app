@@ -37,6 +37,15 @@ app.use(
   })
 );
 
+app.get("/users/articles/edit/:articleId", (req, res) => {
+  let articleId = req.params.articleId;
+  db.one("SELECT articleid,title,body FROM articles WHERE articleid =$1", [
+    articleId,
+  ]).then((article) => {
+    res.render("edit-article", article);
+  });
+});
+
 app.get("/users/add-article", (req, res) => {
   res.render("add-article");
 });
@@ -44,7 +53,9 @@ app.get("/users/add-article", (req, res) => {
 app.post("/users/add-article", (req, res) => {
   let title = req.body.title;
   let body = req.body.body;
-  let userId = req.session.user.userId;
+
+  let userId = 4;
+  //   let userId = req.session.user.userId;
 
   db.none("INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)", [
     title,
@@ -94,7 +105,8 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/users/articles", (req, res) => {
-  userId = req.session.user.userId;
+  userId = 4;
+  //   userId = req.session.user.userId;
 
   db.any("SELECT articleid,title,body FROM articles WHERE userid = $1", [
     userId,
