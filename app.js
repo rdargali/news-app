@@ -37,6 +37,12 @@ app.use(
 
 //routes and actions
 
+app.get("/", (req, res) => {
+  db.any("SELECT article,id,title,body FROM articles").then((article) => {
+    res.render("index", { articles: article });
+  });
+});
+
 app.post("/users/delete-article", (req, res) => {
   let articleId = req.body.articleId;
   db.none("DELETE FROM articles WHERE articleid = $1", [articleId]).then(() => {
