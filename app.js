@@ -23,6 +23,7 @@ app.engine(
 );
 app.set("views", "./views");
 app.set("view engine", "mustache");
+app.use("/css", express.static("css"));
 
 //session
 const session = require("express-session");
