@@ -37,6 +37,15 @@ app.use(
   })
 );
 
+//routes and actions
+
+app.post("/users/delete-article", (req, res) => {
+  let articleId = req.body.articleId;
+  db.none("DELETE FROM articles WHERE articleid = $1", [articleId]).then(() => {
+    res.redirect("/users/articles");
+  });
+});
+
 app.post("/users/update-article", (req, res) => {
   let title = req.body.title;
   let body = req.body.body;
