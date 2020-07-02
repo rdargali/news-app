@@ -74,9 +74,7 @@ app.get("/users/add-article", (req, res) => {
 app.post("/users/add-article", (req, res) => {
   let title = req.body.title;
   let body = req.body.body;
-
-  let userId = 4;
-  //   let userId = req.session.user.userId;
+  let userId = req.session.user.userId;
 
   db.none("INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)", [
     title,
@@ -126,8 +124,7 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/users/articles", (req, res) => {
-  userId = 4;
-  //   userId = req.session.user.userId;
+  userId = req.session.user.userId;
 
   db.any("SELECT articleid,title,body FROM articles WHERE userid = $1", [
     userId,
