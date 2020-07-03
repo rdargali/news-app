@@ -2,10 +2,12 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+// const uerRoutes = require("./routes/users")
+
 //pg promise
 const pgp = require("pg-promise")();
 const CONNECTION_STRING = "postgres://localhost:5432/newsdb";
-const db = pgp(CONNECTION_STRING);
+db = pgp(CONNECTION_STRING);
 
 //body parser
 const bodyParser = require("body-parser");
@@ -37,57 +39,12 @@ app.use(
 
 //routes and actions
 
+const userRoutes = require("./routes/users");
+app.use("/users", userRoutes);
+
 app.get("/", (req, res) => {
   db.any("SELECT articleid,title,body FROM articles").then((article) => {
     res.render("index", { articles: article });
-  });
-});
-
-app.post("/users/delete-article", (req, res) => {
-  let articleId = req.body.articleId;
-  db.none("DELETE FROM articles WHERE articleid = $1", [articleId]).then(() => {
-    res.redirect("/users/articles");
-  });
-});
-
-app.post("/users/update-article", (req, res) => {
-  let title = req.body.title;
-  let body = req.body.body;
-  let articleId = req.body.articleId;
-
-  db.none("UPDATE articles SET title = $1, body = $2 WHERE articleid = $3", [
-    title,
-    body,
-    articleId,
-  ]).then(() => {
-    res.redirect("/users/articles");
-  });
-});
-
-app.get("/users/articles/edit/:articleId", (req, res) => {
-  let articleId = req.params.articleId;
-  db.one("SELECT articleid,title,body FROM articles WHERE articleid =$1", [
-    articleId,
-  ]).then((article) => {
-    res.render("edit-article", article);
-  });
-});
-
-app.get("/users/add-article", (req, res) => {
-  res.render("add-article");
-});
-
-app.post("/users/add-article", (req, res) => {
-  let title = req.body.title;
-  let body = req.body.body;
-  let userId = req.session.user.userId;
-
-  db.none("INSERT INTO articles(title,body,userid) VALUES($1,$2,$3)", [
-    title,
-    body,
-    userId,
-  ]).then(() => {
-    res.redirect("/users/articles");
   });
 });
 
@@ -126,16 +83,6 @@ app.post("/login", (req, res) => {
       //if user doesn't exist
       res.render("login", { message: "Invalid username or password!" });
     }
-  });
-});
-
-app.get("/users/articles", (req, res) => {
-  userId = req.session.user.userId;
-
-  db.any("SELECT articleid,title,body FROM articles WHERE userid = $1", [
-    userId,
-  ]).then((articles) => {
-    res.render("articles", { articles: articles });
   });
 });
 
