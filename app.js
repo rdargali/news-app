@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
-//postgres promise
+//pg promise
 const pgp = require("pg-promise")();
 const CONNECTION_STRING = "postgres://localhost:5432/newsdb";
 const db = pgp(CONNECTION_STRING);
@@ -29,7 +29,7 @@ app.use("/css", express.static("css"));
 const session = require("express-session");
 app.use(
   session({
-    secret: "totally secret secrey key",
+    secret: "totally super secret key",
     resave: false,
     saveUninitialized: false,
   })
