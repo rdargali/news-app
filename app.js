@@ -38,7 +38,7 @@ app.use(
 //routes and actions
 
 app.get("/", (req, res) => {
-  db.any("SELECT article,id,title,body FROM articles").then((article) => {
+  db.any("SELECT articleid,title,body FROM articles").then((article) => {
     res.render("index", { articles: article });
   });
 });
