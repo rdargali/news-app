@@ -19,6 +19,18 @@ router.use(
   })
 );
 
+router.get("/logout", (req, res, next) => {
+  if (req.session) {
+    req.session.destroy((error) => {
+      if (error) {
+        next(error);
+      } else {
+        res.redirect("login");
+      }
+    });
+  }
+});
+
 router.get("/", (req, res) => {
   db.any("SELECT articleid,title,body FROM articles").then((article) => {
     res.render("index", { articles: article });
