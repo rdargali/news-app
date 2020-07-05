@@ -31,10 +31,17 @@ router.get("/logout", (req, res, next) => {
   }
 });
 
-router.get("/", (req, res) => {
-  db.any("SELECT articleid,title,body FROM articles").then((article) => {
-    res.render("index", { articles: article });
-  });
+// router.get("/", (req, res) => {
+//   db.any("SELECT articleid,title,body FROM articles").then((article) => {
+//     res.render("index", { articles: article });
+//   });
+// });
+
+//async await syntax
+
+router.get("/", async (req, res) => {
+  let article = await db.any("SELECT articleid,title,body FROM articles");
+  res.render("index", { articles: article });
 });
 
 router.get("/login", (req, res) => {
