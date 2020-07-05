@@ -22,6 +22,11 @@ app.use(
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use((req, res, next) => {
+  res.locals.authenticated = req.session.user ? true : false;
+  next();
+});
+
 //mustache
 const mustacheExpress = require("mustache-express");
 app.engine(
