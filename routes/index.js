@@ -103,7 +103,9 @@ router.post("/register", (req, res) => {
               username,
               hash,
             ]).then(() => {
-              res.send("success");
+              res.render("login", {
+                success: "Username and Password registered!",
+              });
             });
           }
         });
